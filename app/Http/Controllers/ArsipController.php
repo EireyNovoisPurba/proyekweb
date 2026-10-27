@@ -13,6 +13,12 @@ class ArsipController extends Controller
 {
     public function index(Request $request)
     {
+        $penciptaList = Arsip::whereNotNull('pencipta')
+                             ->where('pencipta', '!=', '')
+                             ->where('pencipta', '!=', '-')
+                             ->distinct()
+                             ->pluck('pencipta');
+
         $query = Arsip::whereIn('id', function($q) {
             $q->selectRaw('MIN(id)')->from('arsips')->groupBy('judul_berkas');
         });
@@ -27,19 +33,22 @@ class ArsipController extends Controller
         $arsip = $query->latest()->paginate(10);
         $arsip->appends(['search' => $request->search]);
 
-        return view('admin.arsip.index', compact('arsip'));
+        return view('admin.arsip.index', compact('arsip', 'penciptaList'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
-            'kategori_arsip' => 'required',
             'judul_berkas'   => 'required',
+            'tahun'          => 'nullable',
+            'pencipta'       => 'nullable|string',
+            'kategori_arsip' => 'nullable|string'
         ]);
 
         Arsip::create([
-            'kategori_arsip'      => $request->kategori_arsip,
+            'kategori_arsip'      => $request->kategori_arsip ?? 'Belum Dikategorikan',
             'judul_berkas'        => $request->judul_berkas,
+            'no_berkas'           => $request->no_berkas ?? '-',
             'tahun'               => $request->tahun ?? '-',
             'pencipta'            => $request->pencipta ?? '-',
             'judul_isi'           => '-',
@@ -49,9 +58,15 @@ class ArsipController extends Controller
             'sifat'               => '-',
             'kondisi'             => '-',
             'keterangan'          => '-',
+            'tanggal_dokumen'       => '-',
+            'kategori_berkas'       => '-',
+            'tingkat_akses_publik'  => '-',
+            'hak_akses'             => '-',
+            'dasar_pertimbangan'    => '-',
+            'tanggal_pemindahan'    => '-',
         ]);
 
-        return redirect()->back()->with('success', 'Folder Berkas berhasil dibuat! Silakan klik Detail Review untuk mengisi dokumen.');
+        return redirect()->back()->with('success', 'Uraian Informasi Berkas (Folder) berhasil dibuat! Silakan klik Detail Arsip untuk mengisi dokumen.');
     }
 
     public function show($id)
@@ -92,7 +107,13 @@ class ArsipController extends Controller
             }
         }
 
-        return view('admin.arsip.edit', compact('arsip'));
+        $penciptaList = \App\Models\Arsip::whereNotNull('pencipta')
+                             ->where('pencipta', '!=', '')
+                             ->where('pencipta', '!=', '-')
+                             ->distinct()
+                             ->pluck('pencipta');
+
+        return view('admin.arsip.edit', compact('arsip', 'penciptaList'));
     }
 
     public function update(Request $request, $id)
@@ -101,12 +122,12 @@ class ArsipController extends Controller
         $judul_berkas_lama = $arsip->judul_berkas;
 
         $request->validate([
-            'kategori_arsip' => 'required|string',
             'judul_berkas'   => 'required|string',
+            'tahun'          => 'nullable',
+            'pencipta'       => 'nullable|string'
         ]);
 
         \App\Models\Arsip::where('judul_berkas', $judul_berkas_lama)->update([
-            'kategori_arsip' => $request->kategori_arsip,
             'judul_berkas'   => $request->judul_berkas,
             'tahun'          => $request->tahun ?? '-',
             'pencipta'       => $request->pencipta ?? '-',
@@ -142,9 +163,6 @@ class ArsipController extends Controller
         }
     }
 
-    // ========================================================================
-    // FUNGSI STORE DOKUMEN YANG BARU DIPERBARUI
-    // ========================================================================
     public function storeDokumen(Request $request)
     {
         $request->validate([
@@ -163,14 +181,9 @@ class ArsipController extends Controller
         $folder = \App\Models\Arsip::where('judul_berkas', $request->judul_berkas)->first();
 
         \App\Models\Arsip::create([
-            // Inherit dari Folder
             'kategori_arsip'      => $folder->kategori_arsip,
             'judul_berkas'        => $folder->judul_berkas,
-
-            // TAHUN CIPTA: Cek apakah user memilih tahun di form, jika tidak, ikuti folder induk
             'tahun'               => ($request->tahun && $request->tahun != '-') ? $request->tahun : $folder->tahun,
-
-            // Input Langsung (Teks Biasa)
             'judul_isi'           => $request->judul_isi,
             'validator'           => $request->validator ?? '-',
             'asal_berkas'         => $request->asal_berkas ?? '-',
@@ -182,8 +195,6 @@ class ArsipController extends Controller
             'klasifikasi_big'     => $request->klasifikasi_big ?? '-',
             'klasifikasi_bakosurtanal' => $request->klasifikasi_bakosurtanal ?? '-',
             'jumlah'              => $request->jumlah ?? '1',
-
-            // Input Kamus Data (Mengubah Angka Form menjadi Teks Database)
             'pencipta'            => \App\Models\Arsip::terjemahkan('pencipta', $request->pencipta),
             'tingkat_klasifikasi' => \App\Models\Arsip::terjemahkan('tingkat_klasifikasi', $request->tingkat_klasifikasi),
             'jenis_klasifikasi'   => \App\Models\Arsip::terjemahkan('jenis_klasifikasi', $request->jenis_klasifikasi),
@@ -191,8 +202,14 @@ class ArsipController extends Controller
             'sifat'               => \App\Models\Arsip::terjemahkan('sifat', $request->sifat),
             'kondisi'             => \App\Models\Arsip::terjemahkan('kondisi', $request->kondisi),
             'keterangan'          => \App\Models\Arsip::terjemahkan('keterangan', $request->keterangan),
-
             'file_arsip'          => $namaFile,
+
+            'tanggal_dokumen'       => $request->tanggal_dokumen ?? '-',
+            'kategori_berkas'       => $request->kategori_berkas ?? '-',
+            'tingkat_akses_publik'  => $request->tingkat_akses_publik ?? '-',
+            'hak_akses'             => $request->hak_akses ?? '-',
+            'dasar_pertimbangan'    => $request->dasar_pertimbangan ?? '-',
+            'tanggal_pemindahan'    => $request->tanggal_pemindahan ?? '-',
         ]);
 
         return redirect()->back()->with('success', 'Dokumen baru berhasil ditambahkan ke dalam Berkas!');
@@ -208,6 +225,19 @@ class ArsipController extends Controller
         ]);
 
         $data = $request->except(['_token', '_method', 'file_arsip']);
+
+        // KOREKSI: Pastikan nilai null dari input text diubah menjadi "-"
+        $fieldsToSanitize = [
+            'validator', 'asal_berkas', 'tanggal_dokumen', 'lokasi_ruangan',
+            'tempat', 'folder_boks', 'hak_akses', 'klasifikasi_big',
+            'klasifikasi_bakosurtanal', 'tanggal_pemindahan', 'dasar_pertimbangan'
+        ];
+
+        foreach ($fieldsToSanitize as $field) {
+            if (empty($data[$field])) {
+                $data[$field] = '-';
+            }
+        }
 
         if ($request->hasFile('file_arsip')) {
             if ($arsip->file_arsip && file_exists(public_path('file_arsip_pdf/' . $arsip->file_arsip))) {
@@ -232,7 +262,6 @@ class ArsipController extends Controller
             \Illuminate\Support\Facades\File::delete(public_path('file_arsip_pdf/' . $arsip->file_arsip));
         }
 
-        // Kosongkan nama file di database
         $arsip->update(['file_arsip' => null]);
 
         return redirect()->back()->with('success', 'File lampiran berhasil dihapus! Anda dapat mengunggah ulang file baru.');
@@ -246,23 +275,26 @@ class ArsipController extends Controller
         }
 
         $query = \App\Models\Arsip::where('kategori_arsip', $kategori)
-                                  ->where('judul_isi', '!=', '-');
+                                  ->whereIn('id', function($q) {
+                                      $q->selectRaw('MIN(id)')->from('arsips')->groupBy('judul_berkas');
+                                  });
 
         if ($request->has('search')) {
             $query->where(function($q) use ($request) {
-                $q->where('judul_isi', 'like', '%' . $request->search . '%')
-                  ->orWhere('judul_berkas', 'like', '%' . $request->search . '%');
+                $q->where('judul_berkas', 'like', '%' . $request->search . '%')
+                  ->orWhere('tahun', 'like', '%' . $request->search . '%');
             });
         }
 
         $arsip = $query->latest()->paginate(10);
         $arsip->appends(['search' => $request->search]);
 
-        $daftarFolder = \App\Models\Arsip::where('kategori_arsip', $kategori)
-                                         ->select('judul_berkas')
-                                         ->distinct()
-                                         ->get();
+        $penciptaList = \App\Models\Arsip::whereNotNull('pencipta')
+                             ->where('pencipta', '!=', '')
+                             ->where('pencipta', '!=', '-')
+                             ->distinct()
+                             ->pluck('pencipta');
 
-        return view('admin.arsip.kategori', compact('arsip', 'kategori', 'daftarFolder'));
+        return view('admin.arsip.kategori', compact('arsip', 'kategori', 'penciptaList'));
     }
 }

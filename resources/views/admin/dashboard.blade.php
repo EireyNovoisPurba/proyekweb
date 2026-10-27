@@ -3,13 +3,13 @@
 @section('content')
     <!-- Page Heading -->
     <div class="d-sm-flex align-items-center justify-content-between mb-4">
-        <h1 class="h3 mb-0 text-gray-800">Dashboard SIKN - Badan Informasi Geospasial</h1>
+        <h1 class="h3 mb-0 text-gray-800">Dashboard Kearsipan - Badan Informasi Geospasial</h1>
     </div>
 
     <!-- Alert Selamat Datang -->
     <div class="alert alert-success shadow-sm mb-4" role="alert">
-        Selamat datang di Sistem Informasi Kearsipan Nasional (SIKN), <strong>{{ Auth::user()->name }}</strong>! Gunakan
-        menu navigasi di sebelah kiri untuk mengelola Induk Berkas dan Dokumen Kearsipan sesuai dengan pembagian unit kerja
+        Selamat datang di Sistem Informasi Kearsipan, <strong>{{ Auth::user()->name }}</strong>! Gunakan
+        menu navigasi di sebelah kiri untuk mengelola Induk Berkas dan Arsip Kearsipan sesuai dengan pembagian unit kerja
         Anda.
     </div>
 
@@ -22,7 +22,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-danger text-uppercase mb-1">Total Arsip Vital</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $vital }} Dokumen</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $vital }} Arsip</div>
                         </div>
                         <div class="col-auto"><i class="fas fa-exclamation-triangle fa-2x text-gray-300"></i></div>
                     </div>
@@ -37,7 +37,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Total Arsip Terjaga</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $terjaga }} Dokumen</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $terjaga }} Arsip</div>
                         </div>
                         <div class="col-auto"><i class="fas fa-shield-alt fa-2x text-gray-300"></i></div>
                     </div>
@@ -52,7 +52,7 @@
                     <div class="row no-gutters align-items-center">
                         <div class="col mr-2">
                             <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Total Arsip Inaktif</div>
-                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $inaktif }} Dokumen</div>
+                            <div class="h5 mb-0 font-weight-bold text-gray-800">{{ $inaktif }} Arsip</div>
                         </div>
                         <div class="col-auto"><i class="fas fa-archive fa-2x text-gray-300"></i></div>
                     </div>

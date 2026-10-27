@@ -30,38 +30,29 @@
                 @method('PUT')
 
                 <div class="row">
-                    <div class="form-group col-md-6">
-                        <label class="font-weight-bold">Kategori Arsip <span class="text-danger">*</span></label>
-                        <select name="kategori_arsip" class="form-control" required>
-                            <option value="">-- Pilih Kategori --</option>
-                            @can('input-vital')
-                                <option value="Arsip Vital" {{ $arsip->kategori_arsip == 'Arsip Vital' ? 'selected' : '' }}>
-                                    Arsip Vital</option>
-                            @endcan
-                            @can('input-terjaga')
-                                <option value="Arsip Terjaga" {{ $arsip->kategori_arsip == 'Arsip Terjaga' ? 'selected' : '' }}>
-                                    Arsip Terjaga</option>
-                            @endcan
-                            @can('input-inaktif')
-                                <option value="Arsip Inaktif" {{ $arsip->kategori_arsip == 'Arsip Inaktif' ? 'selected' : '' }}>
-                                    Arsip Inaktif</option>
-                            @endcan
-                        </select>
-                    </div>
-                    <div class="form-group col-md-6">
+                    <div class="form-group col-md-12">
                         <label class="font-weight-bold">Tahun Berkas</label>
                         <input type="number" name="tahun" class="form-control" value="{{ old('tahun', $arsip->tahun) }}">
                     </div>
+
                     <div class="form-group col-md-12">
                         <label class="font-weight-bold">Judul Berkas (Nama Folder Utama) <span
                                 class="text-danger">*</span></label>
                         <input type="text" name="judul_berkas" class="form-control" required
                             value="{{ old('judul_berkas', $arsip->judul_berkas) }}">
                     </div>
+
                     <div class="form-group col-md-12">
                         <label class="font-weight-bold">Pencipta Arsip</label>
-                        <input type="text" name="pencipta" class="form-control"
-                            value="{{ old('pencipta', $arsip->pencipta) }}">
+                        <select name="pencipta" class="form-control">
+                            <option value="">-- Pilih Pencipta Arsip --</option>
+                            @foreach ($penciptaList as $p)
+                                <option value="{{ $p }}"
+                                    {{ old('pencipta', $arsip->pencipta) == $p ? 'selected' : '' }}>
+                                    {{ $p }}
+                                </option>
+                            @endforeach
+                        </select>
                     </div>
                 </div>
                 <hr>

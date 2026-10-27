@@ -53,7 +53,7 @@
         </div>
     </div>
 
-    <!-- 2. TABEL IDENTITAS & INFORMASI LENGKAP (21 KOLOM EXCEL) -->
+    <!-- 2. TABEL IDENTITAS & INFORMASI LENGKAP -->
     <div class="card shadow mb-4">
         <div class="card-header py-3 bg-white">
             <h6 class="m-0 font-weight-bold text-primary">Bagian Identitas & Informasi Arsip Terperinci</h6>
@@ -63,12 +63,13 @@
                 <table class="table table-striped table-bordered mb-0" width="100%">
                     <tbody>
                         <tr>
-                            <td width="30%" class="font-weight-bold">Judul Berkas (Induk)</td>
+                            <td width="30%" class="font-weight-bold">Uraian Informasi Berkas (Induk)</td>
                             <td width="2%">:</td>
                             <td>{{ $arsip->judul_berkas }}</td>
                         </tr>
                         <tr>
-                            <td class="font-weight-bold">Judul Isi (Dokumen)</td>
+                            <!-- Diperbarui labelnya -->
+                            <td class="font-weight-bold">Uraian Informasi Arsip</td>
                             <td>:</td>
                             <td class="text-primary font-weight-bold">{{ $arsip->judul_isi }}</td>
                         </tr>
@@ -96,6 +97,11 @@
                             <td class="font-weight-bold">Tahun Penciptaan</td>
                             <td>:</td>
                             <td>{{ $arsip->tahun }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Tanggal Dokumen</td>
+                            <td>:</td>
+                            <td>{{ $arsip->tanggal_dokumen }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold">Retensi Aktif</td>
@@ -128,9 +134,24 @@
                             <td>{{ $arsip->tingkat_klasifikasi }}</td>
                         </tr>
                         <tr>
+                            <td class="font-weight-bold">Tingkat Akses Publik</td>
+                            <td>:</td>
+                            <td>{{ $arsip->tingkat_akses_publik }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Hak Akses</td>
+                            <td>:</td>
+                            <td>{{ $arsip->hak_akses }}</td>
+                        </tr>
+                        <tr>
                             <td class="font-weight-bold">Jenis Klasifikasi</td>
                             <td>:</td>
                             <td>{{ $arsip->jenis_klasifikasi }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Kategori Berkas</td>
+                            <td>:</td>
+                            <td>{{ $arsip->kategori_berkas }}</td>
                         </tr>
                         <tr>
                             <td class="font-weight-bold">Klasifikasi BIG</td>
@@ -163,6 +184,16 @@
                             <td>{{ $arsip->keterangan }}</td>
                         </tr>
                         <tr>
+                            <td class="font-weight-bold">Tanggal Pemindahan</td>
+                            <td>:</td>
+                            <td>{{ $arsip->tanggal_pemindahan }}</td>
+                        </tr>
+                        <tr>
+                            <td class="font-weight-bold">Dasar Pertimbangan</td>
+                            <td>:</td>
+                            <td>{{ $arsip->dasar_pertimbangan }}</td>
+                        </tr>
+                        <tr>
                             <td class="font-weight-bold">Jumlah</td>
                             <td>:</td>
                             <td>{{ $arsip->jumlah }}</td>
@@ -180,7 +211,6 @@
                                         class="btn btn-sm btn-primary shadow-sm mr-3"><i class="fas fa-download mr-1"></i>
                                         Unduh</a>
 
-                                    <!-- TOMBOL HAPUS FILE MANDIRI -->
                                     <form action="{{ route('arsip.hapusFile', $arsip->id) }}" method="POST"
                                         class="d-inline">
                                         @csrf @method('DELETE')
@@ -231,14 +261,15 @@
                 @csrf @method('PUT')
                 <div class="modal-content border-bottom-warning">
                     <div class="modal-header bg-light">
-                        <h5 class="modal-title font-weight-bold text-warning">Edit Dokumen</h5>
+                        <h5 class="modal-title font-weight-bold text-warning">Edit Uraian Informasi Arsip</h5>
                         <button type="button" class="close" data-dismiss="modal"><span>&times;</span></button>
                     </div>
                     <div class="modal-body row">
 
-                        <div class="form-group col-md-6"><label>Judul Isi <span class="text-danger">*</span></label><input
-                                type="text" name="judul_isi" class="form-control" required
-                                value="{{ $arsip->judul_isi }}"></div>
+                        <!-- Diperbarui labelnya -->
+                        <div class="form-group col-md-6"><label>Uraian Informasi Arsip <span
+                                    class="text-danger">*</span></label><input type="text" name="judul_isi"
+                                class="form-control" required value="{{ $arsip->judul_isi }}"></div>
                         <div class="form-group col-md-6"><label>Validator</label><input type="text" name="validator"
                                 class="form-control" value="{{ $arsip->validator }}"></div>
 
@@ -264,6 +295,12 @@
                                         {{ $i }}</option>
                                 @endfor
                             </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>Tanggal Dokumen</label>
+                            <input type="text" name="tanggal_dokumen" class="form-control"
+                                placeholder="Cth: 24 Des 2008" value="{{ $arsip->tanggal_dokumen }}">
                         </div>
 
                         <div class="form-group col-md-4">
@@ -293,10 +330,8 @@
                                 name="lokasi_ruangan" class="form-control" value="{{ $arsip->lokasi_ruangan }}"></div>
                         <div class="form-group col-md-4"><label>Tempat (Rak/Lemari)</label><input type="text"
                                 name="tempat" class="form-control" value="{{ $arsip->tempat }}"></div>
-                        <div class="form-group col-md-4"><label>Folder / Boks</label><input type="text"
-                                name="folder_boks" class="form-control" value="{{ $arsip->folder_boks }}"></div>
 
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label>Tingkat Klasifikasi</label>
                             <select name="tingkat_klasifikasi" class="form-control">
                                 <option value="-">-- Pilih --</option>
@@ -308,7 +343,7 @@
                                     {{ $arsip->tingkat_klasifikasi == 'Terbatas' ? 'selected' : '' }}>3 - Terbatas</option>
                             </select>
                         </div>
-                        <div class="form-group col-md-6">
+                        <div class="form-group col-md-4">
                             <label>Jenis Klasifikasi</label>
                             <select name="jenis_klasifikasi" class="form-control">
                                 <option value="-">-- Pilih --</option>
@@ -319,6 +354,36 @@
                                     {{ $arsip->jenis_klasifikasi == 'Badan Informasi Geospasial' ? 'selected' : '' }}>2 -
                                     Badan Informasi Geospasial</option>
                             </select>
+                        </div>
+                        <div class="form-group col-md-4"><label>Folder / Boks</label><input type="text"
+                                name="folder_boks" class="form-control" value="{{ $arsip->folder_boks }}"></div>
+
+                        <div class="form-group col-md-4">
+                            <label>Kategori Berkas</label>
+                            <select name="kategori_berkas" class="form-control">
+                                <option value="-">-- Pilih --</option>
+                                <option value="Substantif"
+                                    {{ $arsip->kategori_berkas == 'Substantif' ? 'selected' : '' }}>Substantif</option>
+                                <option value="Fasilitatif"
+                                    {{ $arsip->kategori_berkas == 'Fasilitatif' ? 'selected' : '' }}>Fasilitatif</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Tingkat Akses Publik</label>
+                            <select name="tingkat_akses_publik" class="form-control">
+                                <option value="-">-- Pilih --</option>
+                                <option value="Terbuka" {{ $arsip->tingkat_akses_publik == 'Terbuka' ? 'selected' : '' }}>
+                                    Terbuka</option>
+                                <option value="Tertutup"
+                                    {{ $arsip->tingkat_akses_publik == 'Tertutup' ? 'selected' : '' }}>Tertutup</option>
+                                <option value="Terbatas"
+                                    {{ $arsip->tingkat_akses_publik == 'Terbatas' ? 'selected' : '' }}>Terbatas</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-4">
+                            <label>Hak Akses</label>
+                            <input type="text" name="hak_akses" class="form-control" placeholder="Cth: Eselon IV"
+                                value="{{ $arsip->hak_akses }}">
                         </div>
 
                         <div class="form-group col-md-6"><label>Klasifikasi BIG</label><input type="text"
@@ -375,6 +440,17 @@
                                 <option value="Musnah" {{ $arsip->keterangan == 'Musnah' ? 'selected' : '' }}>3 - Musnah
                                 </option>
                             </select>
+                        </div>
+
+                        <div class="form-group col-md-4">
+                            <label>Tanggal Pemindahan</label>
+                            <input type="text" name="tanggal_pemindahan" class="form-control"
+                                placeholder="Cth: 12 Jan 2026" value="{{ $arsip->tanggal_pemindahan }}">
+                        </div>
+                        <div class="form-group col-md-8">
+                            <label>Dasar Pertimbangan</label>
+                            <textarea name="dasar_pertimbangan" class="form-control" rows="1"
+                                placeholder="Cth: Memiliki dampak yang mengganggu kinerja BIG...">{{ $arsip->dasar_pertimbangan }}</textarea>
                         </div>
 
                         <div class="form-group col-md-12 mt-2">

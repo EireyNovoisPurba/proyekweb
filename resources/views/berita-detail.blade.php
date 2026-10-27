@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{ $berita->Judul ?? 'Baca Berita' }} - SIKN BIG</title>
+    <title>{{ $berita->Judul ?? 'Baca Berita' }} - KEARSIPAN BIG</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">

@@ -13,11 +13,12 @@ class Arsip extends Model
     protected $table = 'arsips';
 
     protected $fillable = [
-        'kategori_arsip', 'judul_berkas', 'judul_isi', 'validator', 'pencipta',
-        'asal_berkas', 'tahun', 'retensi_aktif', 'retensi_inaktif', 'lokasi_ruangan',
+        'kategori_arsip', 'judul_berkas', 'no_berkas', 'judul_isi', 'validator', 'pencipta',
+        'asal_berkas', 'tahun', 'tanggal_dokumen', 'retensi_aktif', 'retensi_inaktif', 'lokasi_ruangan',
         'tempat', 'folder_boks', 'tingkat_klasifikasi', 'jenis_klasifikasi',
         'klasifikasi_big', 'klasifikasi_bakosurtanal', 'jenis_fisik', 'sifat',
-        'kondisi', 'keterangan', 'jumlah', 'file_arsip'
+        'kondisi', 'kategori_berkas', 'tingkat_akses_publik', 'hak_akses',
+        'dasar_pertimbangan', 'tanggal_pemindahan', 'keterangan', 'jumlah', 'file_arsip'
     ];
 
     /**

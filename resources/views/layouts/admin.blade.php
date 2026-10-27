@@ -62,6 +62,13 @@
                 </a>
             </li>
 
+            <!-- Nav Item - Pojok Edukasi / Fun Fact -->
+            <li class="nav-item {{ request()->routeIs('fun-fact.*') ? 'active' : '' }}">
+                <a class="nav-link" href="{{ route('fun-fact.index') }}">
+                    <i class="fas fa-fw fa-lightbulb"></i>
+                    <span>Pojok Edukasi </span>
+                </a>
+            </li>
             <!-- Nav Item - Kelola Berita -->
             <li class="nav-item">
                 <a class="nav-link" href="{{ route('berita.index') }}">
@@ -74,11 +81,11 @@
                 Manajemen Berkas
             </div>
 
-            <!-- Nav Item - Daftar Berkas -->
+            <!-- Nav Item - Uraian Informasi Berkas (Arsip Umum) -->
             <li class="nav-item {{ request()->routeIs('arsip.index') ? 'active' : '' }}">
                 <a class="nav-link pb-1" href="{{ route('arsip.index') }}">
                     <i class="fas fa-fw fa-folder-open"></i>
-                    <span>Daftar Berkas</span>
+                    <span>Uraian Informasi Berkas</span>
                 </a>
             </li>
 
@@ -87,36 +94,90 @@
 
             <!-- ================= 2. PENGELOLAAN DOKUMEN (ISI BERKAS) ================= -->
             <div class="sidebar-heading">
-                Kelola Judul Isi Arsip
+                Kelola Arsip
             </div>
 
-            <!-- Nav Item - Arsip Vital -->
+            <!-- Nav Item - Arsip Vital (Dropdown Accordion) -->
             @can('input-vital')
-                <li class="nav-item {{ request()->is('admin/arsip/kategori/Arsip*Vital') ? 'active' : '' }}">
-                    <a class="nav-link pb-1" href="{{ route('arsip.kategori', 'Arsip Vital') }}">
+                <li class="nav-item {{ request()->routeIs('admin.arsip_vital.*') ? 'active' : '' }}">
+                    <a class="nav-link pb-1 collapsed" href="#collapseArsipVital"
+                        data-toggle="collapse" data-target="#collapseArsipVital"
+                        aria-expanded="{{ request()->routeIs('admin.arsip_vital.*') ? 'true' : 'false' }}"
+                        aria-controls="collapseArsipVital">
                         <i class="fas fa-fw fa-exclamation-triangle"></i>
-                        <span>Dokumen Vital</span>
+                        <span>Arsip Vital</span>
                     </a>
+                    <div id="collapseArsipVital"
+                        class="collapse {{ request()->routeIs('admin.arsip_vital.*') ? 'show' : '' }}"
+                        aria-labelledby="headingArsipVital" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Menu Arsip Vital:</h6>
+                            <a class="collapse-item {{ request()->routeIs('admin.arsip_vital.index') || request()->routeIs('admin.arsip_vital.create') || request()->routeIs('admin.arsip_vital.show') ? 'active' : '' }}"
+                                href="{{ route('admin.arsip_vital.index') }}">
+                                <i class="fas fa-folder-open fa-sm mr-1"></i> Uraian Informasi Berkas
+                            </a>
+                            <a class="collapse-item {{ request()->routeIs('admin.arsip_vital.daftar-arsip') ? 'active' : '' }}"
+                                href="{{ route('admin.arsip_vital.daftar-arsip') }}">
+                                <i class="fas fa-file-alt fa-sm mr-1"></i> Uraian Informasi Arsip
+                            </a>
+                        </div>
+                    </div>
                 </li>
             @endcan
 
-            <!-- Nav Item - Arsip Terjaga -->
+            <!-- Nav Item - Arsip Terjaga (Dropdown Accordion) -->
             @can('input-terjaga')
-                <li class="nav-item {{ request()->is('admin/arsip/kategori/Arsip*Terjaga') ? 'active' : '' }}">
-                    <a class="nav-link pb-1" href="{{ route('arsip.kategori', 'Arsip Terjaga') }}">
+                <li class="nav-item {{ request()->routeIs('admin.arsip_terjaga.*') ? 'active' : '' }}">
+                    <a class="nav-link pb-1 collapsed" href="#collapseArsipTerjaga"
+                        data-toggle="collapse" data-target="#collapseArsipTerjaga"
+                        aria-expanded="{{ request()->routeIs('admin.arsip_terjaga.*') ? 'true' : 'false' }}"
+                        aria-controls="collapseArsipTerjaga">
                         <i class="fas fa-fw fa-shield-alt"></i>
-                        <span>Dokumen Terjaga</span>
+                        <span>Arsip Terjaga</span>
                     </a>
+                    <div id="collapseArsipTerjaga"
+                        class="collapse {{ request()->routeIs('admin.arsip_terjaga.*') ? 'show' : '' }}"
+                        aria-labelledby="headingArsipTerjaga" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Menu Arsip Terjaga:</h6>
+                            <a class="collapse-item {{ request()->routeIs('admin.arsip_terjaga.index') || request()->routeIs('admin.arsip_terjaga.create') || request()->routeIs('admin.arsip_terjaga.show') ? 'active' : '' }}"
+                                href="{{ route('admin.arsip_terjaga.index') }}">
+                                <i class="fas fa-folder-open fa-sm mr-1"></i> Uraian Informasi Berkas
+                            </a>
+                            <a class="collapse-item {{ request()->routeIs('admin.arsip_terjaga.daftar-arsip') ? 'active' : '' }}"
+                                href="{{ route('admin.arsip_terjaga.daftar-arsip') }}">
+                                <i class="fas fa-file-alt fa-sm mr-1"></i> Uraian Informasi Arsip
+                            </a>
+                        </div>
+                    </div>
                 </li>
             @endcan
 
-            <!-- Nav Item - Arsip Inaktif -->
+            <!-- Nav Item - Arsip Inaktif (Dropdown Accordion) -->
             @can('input-inaktif')
-                <li class="nav-item {{ request()->is('admin/arsip/kategori/Arsip*Inaktif') ? 'active' : '' }}">
-                    <a class="nav-link pb-1" href="{{ route('arsip.kategori', 'Arsip Inaktif') }}">
+                <li class="nav-item {{ request()->routeIs('admin.arsip_inaktif.*') ? 'active' : '' }}">
+                    <a class="nav-link pb-1 collapsed" href="#collapseArsipInaktif"
+                        data-toggle="collapse" data-target="#collapseArsipInaktif"
+                        aria-expanded="{{ request()->routeIs('admin.arsip_inaktif.*') ? 'true' : 'false' }}"
+                        aria-controls="collapseArsipInaktif">
                         <i class="fas fa-fw fa-archive"></i>
-                        <span>Dokumen Inaktif</span>
+                        <span>Arsip Inaktif</span>
                     </a>
+                    <div id="collapseArsipInaktif"
+                        class="collapse {{ request()->routeIs('admin.arsip_inaktif.*') ? 'show' : '' }}"
+                        aria-labelledby="headingArsipInaktif" data-parent="#accordionSidebar">
+                        <div class="bg-white py-2 collapse-inner rounded">
+                            <h6 class="collapse-header">Menu Arsip Inaktif:</h6>
+                            <a class="collapse-item {{ request()->routeIs('admin.arsip_inaktif.index') || request()->routeIs('admin.arsip_inaktif.create') || request()->routeIs('admin.arsip_inaktif.show') ? 'active' : '' }}"
+                                href="{{ route('admin.arsip_inaktif.index') }}">
+                                <i class="fas fa-folder-open fa-sm mr-1"></i> Uraian Informasi Berkas
+                            </a>
+                            <a class="collapse-item {{ request()->routeIs('admin.arsip_inaktif.daftar-arsip') ? 'active' : '' }}"
+                                href="{{ route('admin.arsip_inaktif.daftar-arsip') }}">
+                                <i class="fas fa-file-alt fa-sm mr-1"></i> Uraian Informasi Arsip
+                            </a>
+                        </div>
+                    </div>
                 </li>
             @endcan
             @can('is-admin')

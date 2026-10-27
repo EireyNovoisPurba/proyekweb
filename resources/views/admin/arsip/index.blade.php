@@ -6,7 +6,6 @@
         <h1 class="h3 mb-0 text-gray-800">Manajemen {{ $kategori_aktif ?? 'Arsip Keseluruhan' }}</h1>
         <div>
             <!-- Tombol Import Excel -->
-            <!-- Tombol Import Excel -->
             @can('is-admin')
                 <button class="btn btn-sm btn-success shadow-sm mr-2" data-toggle="modal" data-target="#modalImport">
                     <i class="fas fa-file-excel fa-sm text-white-50"></i> Import Data Excel
@@ -14,7 +13,7 @@
             @endcan
             <!-- Tombol Tambah Manual -->
             <button class="btn btn-sm btn-primary shadow-sm" data-toggle="modal" data-target="#modalTambah">
-                <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Arsip Manual
+                <i class="fas fa-plus fa-sm text-white-50"></i> Tambah Berkas Manual
             </button>
         </div>
     </div>
@@ -50,9 +49,8 @@
                     <thead class="bg-light text-dark">
                         <tr>
                             <th width="5%">No</th>
-                            <th width="15%">Kategori</th>
                             <th>Judul Berkas</th>
-                            <th width="15%">Pencipta</th>
+                            <th width="20%">Pencipta</th>
                             <th width="10%">Tahun</th>
                             <th width="20%">Aksi File & Data</th>
                         </tr>
@@ -62,19 +60,12 @@
                             <tr>
                                 <td>{{ $arsip->firstItem() + $loop->index }}</td>
                                 <td>
-                                    <span
-                                        class="badge badge-{{ $item->kategori_arsip == 'Arsip Vital' ? 'danger' : ($item->kategori_arsip == 'Arsip Terjaga' ? 'warning' : 'info') }}">
-                                        {{ $item->kategori_arsip }}
-                                    </span>
-                                </td>
-                                <td>
                                     <!-- Hanya tampilkan nama berkas utama -->
                                     <strong class="text-dark">{{ $item->judul_berkas }}</strong>
                                 </td>
                                 <td>{{ $item->pencipta }}</td>
                                 <td>{{ $item->tahun }}</td>
 
-                                <!-- ================= BAGIAN YANG DIGANTI ================= -->
                                 <td>
                                     <!-- Tombol Detail / Review ala SIKN -->
                                     <a href="{{ route('arsip.show', $item->id) }}" class="btn btn-sm btn-info shadow-sm"
@@ -82,7 +73,6 @@
                                         <i class="fas fa-list-alt"></i> Detail Review
                                     </a>
 
-                                    <!-- ================= TOMBOL EDIT (BARU DITAMBAHKAN) ================= -->
                                     <a href="{{ route('arsip.edit', $item->id) }}"
                                         class="btn btn-sm btn-warning text-white shadow-sm mx-1" title="Edit Arsip">
                                         <i class="fas fa-edit"></i> Edit
@@ -99,13 +89,10 @@
                                         </button>
                                     </form>
                                 </td>
-                                <!-- ======================================================= -->
-                                <!-- ======================================================= -->
-
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="6" class="text-center text-muted py-4">
+                                <td colspan="5" class="text-center text-muted py-4">
                                     <i class="fas fa-folder-open mb-2 text-gray-400" style="font-size: 2rem;"></i><br>
                                     Belum ada data arsip. Silakan tambah manual atau import dari Excel.
                                 </td>
@@ -129,7 +116,7 @@
                 @csrf
                 <div class="modal-content border-bottom-primary">
                     <div class="modal-header bg-light">
-                        <h5 class="modal-title font-weight-bold text-primary" id="modalTambahLabel">Tambah Arsip Surat
+                        <h5 class="modal-title font-weight-bold text-primary" id="modalTambahLabel">Tambah Berkas Arsip
                             Manual</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
                                 aria-hidden="true">&times;</span></button>
@@ -138,34 +125,28 @@
                         <div class="form-group col-md-12 text-center mb-4">
                             <span class="badge badge-primary px-3 py-2">Pembuatan Folder Berkas</span>
                         </div>
-                        <div class="form-group col-md-6">
-                            <label>Kategori Arsip <span class="text-danger">*</span></label>
-                            <select name="kategori_arsip" class="form-control" required>
-                                <option value="">-- Pilih Kategori --</option>
-                                @can('input-vital')
-                                    <option value="Arsip Vital">Arsip Vital</option>
-                                @endcan
-                                @can('input-terjaga')
-                                    <option value="Arsip Terjaga">Arsip Terjaga</option>
-                                @endcan
-                                @can('input-inaktif')
-                                    <option value="Arsip Inaktif">Arsip Inaktif</option>
-                                @endcan
-                            </select>
-                        </div>
-                        <div class="form-group col-md-6">
+
+                        <div class="form-group col-md-12">
                             <label>Tahun Berkas</label>
                             <input type="number" name="tahun" class="form-control" placeholder="Contoh: 2026">
                         </div>
+
                         <div class="form-group col-md-12">
                             <label>Judul Berkas (Nama Folder Utama) <span class="text-danger">*</span></label>
                             <input type="text" name="judul_berkas" class="form-control" required
                                 placeholder="Contoh: Laporan Pengerjaan Program ABC...">
                         </div>
+
                         <div class="form-group col-md-12">
                             <label>Pencipta Arsip</label>
-                            <input type="text" name="pencipta" class="form-control"
-                                placeholder="Contoh: Bakosurtanal...">
+                            <select name="pencipta" class="form-control">
+                                <option value="">-- Pilih Pencipta Arsip --</option>
+                                @foreach ($penciptaList as $p)
+                                    <option value="{{ $p }}">{{ $p }}</option>
+                                @endforeach
+                            </select>
+                            <small class="text-muted mt-1 d-block">Pilihan otomatis terintegrasi dari data arsip yang sudah
+                                ada di sistem.</small>
                         </div>
                     </div>
                     <div class="modal-footer">
